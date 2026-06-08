@@ -1,37 +1,49 @@
 import Customer from "../models/Customers.js";
+import formatName from "../utils/formatName.js";
 
 
 //////////// Create Customer
 
 export const createCustomer = async (req, res) => {
      try {
-          const {customerName, mobileNumber} = req.body
+          const { customerName, mobileNumber } = req.body
 
           const existingCustomer = await Customer.findOne({
                mobileNumber
           })
-
-          if(existingCustomer) {
+          ///////////// Validations pending
+          if (existingCustomer) {
                return res.status(400).json({
-                    success : false,
-                    message : "Customer already exists!"
+                    success: false,
+                    message: "Customer already exists!"
                })
           }
 
+          const formattedName =
+               formatName(customerName);
+
           const customer = await Customer.create({
-               customerName,
+               customerName: formattedName,
                mobileNumber
           })
 
           res.status(201).json({
-               success : true,
-               data : customer
+               success: true,
+               data: customer
           })
-     } catch(error) {
-           res.status(500).json({
-               success : false,
-               message : error.message
-           })
+     } catch (error) {
+
+          if (error.name === "ValidationError") {
+               return res.status(400).json({
+                    success: false,
+                    message: Object.values(error.errors)[0].message
+               })
+          }
+
+          res.status(500).json({
+               success: false,
+               message: error.message
+          })
      }
 }
 
@@ -42,24 +54,54 @@ export const createCustomer = async (req, res) => {
 export const getCustomers = async (req, res) => {
      try {
           const customer = await Customer.find({
-               active : true
+               active: true
           }).sort({
-               createdAt : -1
+               createdAt: -1
           })
 
           res.json({
-               success : true,
-               data : customer
+               success: true,
+               data: customer
           });
 
-     }catch(error) {
+     } catch (error) {
           res.status(500).json({
-               success : false,
-               message : error.message
+               success: false,
+               message: error.message
           })
      }
 }
 
+
+
+/////////////// Search your by Mobile Number
+
+export const searchCustomerByMobile = async (req, res) => {
+     try {
+          const customer = await Customer.findOne({
+               mobileNumber: req.params.mobileNumber,
+               active: true
+          });
+
+          if (!customer) {
+               return res.status(404).json({
+                    success: false,
+                    message: 'Customer not found'
+               })
+          }
+
+          res.json({
+               success: true,
+               data: customer
+          })
+
+     } catch (error) {
+          res.status(500).json({
+               success: false,
+               message: error.message
+          })
+     }
+}
 
 
 /////////// Get Single Customer
@@ -68,22 +110,22 @@ export const singleCustomer = async (req, res) => {
      try {
           const customer = await Customer.findById(req.params.id)
 
-          if(!customer) {
+          if (!customer) {
                res.status(500).json({
-                    success : false,
-                    message : `Customer doen't exists!`
+                    success: false,
+                    message: `Customer doen't exists!`
                })
           }
 
           res.json({
-               success : true,
-               data : customer
+               success: true,
+               data: customer
           })
 
-     } catch(error) {
+     } catch (error) {
           res.status(500).json({
-               success : false,
-               message : error.message
+               success: false,
+               message: error.message
           })
      }
 }
@@ -94,23 +136,36 @@ export const singleCustomer = async (req, res) => {
 
 export const updateCustomer = async (req, res) => {
      try {
+
+          if(req.body.customerName) {
+               req.body.customerName = formatName(req.body.customerName)
+          }
+
           const customer = await Customer.findByIdAndUpdate(
                req.params.id,
                req.body,
                {
-                    new : true
+                    new: true,
+                    runValidators : true
                }
           )
 
+          if(!customer) {
+               return res.status(404).json({
+                    success : false,
+                    message : "Customer not found"
+               })
+          }
+
           res.json({
-               success : true,
-               data : customer
+               success: true,
+               data: customer
           })
 
      } catch (error) {
           res.status(500).json({
-               success : false,
-               message : error.message
+               success: false,
+               message: error.message
           })
      }
 }
@@ -124,18 +179,18 @@ export const deleteCustomer = async (req, res) => {
           await Customer.findByIdAndDelete(
                req.params.id,
                {
-                    active : false
+                    active: false
                }
           )
 
           res.json({
-               success : true,
-               message : "Customer Deactivated!"
+               success: true,
+               message: "Customer Deactivated!"
           })
      } catch (error) {
           res.status(500).json({
-               success : false,
-               message : error.message
+               success: false,
+               message: error.message
           })
      }
 }
