@@ -3,6 +3,7 @@ import cors from "cors"
 import authRoutes from './routes/authRoutes.js'
 import serviceRoutes from './routes/serviceRoutes.js'
 import customerRoutes from './routes/customerRoutes.js'
+import billRoutes from './routes/billRoutes.js'
 
 
 const app = express()
@@ -23,6 +24,11 @@ app.use(
 app.use(
      '/api/customers',
      customerRoutes
+)
+
+app.use(
+     '/api/bills',
+     billRoutes
 )
 
 app.get("/", (req, res) => {

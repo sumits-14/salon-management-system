@@ -11,7 +11,7 @@ export const createCustomer = async (req, res) => {
           const existingCustomer = await Customer.findOne({
                mobileNumber
           })
-          ///////////// Validations pending
+
           if (existingCustomer) {
                return res.status(400).json({
                     success: false,
