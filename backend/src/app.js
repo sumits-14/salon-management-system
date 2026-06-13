@@ -4,6 +4,7 @@ import authRoutes from './routes/authRoutes.js'
 import serviceRoutes from './routes/serviceRoutes.js'
 import customerRoutes from './routes/customerRoutes.js'
 import billRoutes from './routes/billRoutes.js'
+import dashboardRoutes from './routes/dashboardRoutes.js'
 
 
 const app = express()
@@ -29,6 +30,11 @@ app.use(
 app.use(
      '/api/bills',
      billRoutes
+)
+
+app.use(
+     '/api/dashboard',
+     dashboardRoutes
 )
 
 app.get("/", (req, res) => {

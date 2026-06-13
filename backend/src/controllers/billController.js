@@ -43,7 +43,7 @@ export const createBill = async (req, res) => {
                })
           }
 
-          /////////// Service Id varification
+          ////////////// Service Id varification
 
           const invalidServiceId = serviceIds.some(
                (id) => !mongoose.Types.ObjectId.isValid(id)
@@ -97,7 +97,7 @@ export const createBill = async (req, res) => {
 
 
 
-///////////// Get Customer Bill
+//////////////// Get Customer Bill
 
 export const getCustomerBills = async (req, res) => {
      try {

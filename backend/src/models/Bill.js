@@ -26,9 +26,9 @@ const billSchema = new mongoose.Schema(
                }
           ],
 
-          totalAmount : {
-               type : Number,
-               required : true
+          totalAmount: {
+               type: Number,
+               required: true
           },
      },
 
@@ -36,6 +36,11 @@ const billSchema = new mongoose.Schema(
           timestamps: true
      }
 )
+
+billSchema.index({
+     worker: 1,
+     createdAt: -1
+})
 
 const Bill = mongoose.model('Bill', billSchema)
 
