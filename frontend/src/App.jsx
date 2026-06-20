@@ -1,12 +1,25 @@
 import { useState } from 'react'
+import { BrowserRouter } from 'react-router-dom'
+import { AuthProvider } from './context/AuthContext'
+import AppRoutes from './routes/AppRoutes'
+import { ToastContainer } from 'react-toastify'
+import "react-toastify/dist/ReactToastify.css"
+
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
-    <h1>
-      Salon Managment System!
-    </h1>
+    <BrowserRouter>
+      <AuthProvider>
+        <AppRoutes />
+        <ToastContainer 
+          position='top-right'
+          autoClose={3000}
+          closeOnClick
+          pauseOnHover
+        />
+      </AuthProvider>
+    </BrowserRouter>
   )
 }
 
