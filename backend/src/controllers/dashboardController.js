@@ -16,7 +16,7 @@ const getAnalytics = async (workerId, startDate) => {
                $group : {
                     _id : null,
 
-                    customers : {
+                    totalCustomersServed : {
                          $sum : 1,
                     },
 
@@ -27,12 +27,24 @@ const getAnalytics = async (workerId, startDate) => {
           },
      ]);
 
-     return (
-          result[0] || {
-               customers : 0,
+     // return (
+     //      result[0] || {
+     //           totalCustomersServed : 0,
+     //           revenue : 0
+     //      }
+     // )/
+
+     if(result.length === 0) {
+          return {
+               totalCustomersServed : 0,
                revenue : 0
           }
-     )
+     }
+
+     return {
+          totalCustomersServed : result[0]?.totalCustomersServed || 0,
+          revenue : result[0]?.revenue || 0,
+     }
 }
 
 export const getWorkerDashboard =
@@ -117,7 +129,7 @@ export const getWorkerDashboard =
 
           // ///// TODAY
           //           today: {
-          //                customers: todaysBills.length,
+          //                totalCustomersServed: todaysBills.length,
 
           //                revenue: todaysBills.reduce((acc, bill) => (
           //                     sum + bill.totalAmount
@@ -126,7 +138,7 @@ export const getWorkerDashboard =
      
           // ///// WEEK
           //           week: {
-          //                customers: weekBills.length,
+          //                totalCustomersServed: weekBills.length,
 
           //                revenue: weekBills.reduce((sum, bill) =>
           //                     sum + bill.totalAmount,
@@ -135,7 +147,7 @@ export const getWorkerDashboard =
 
           // ///// MONTH
           //           month: {
-          //                customers: monthBills.length,
+          //                totalCustomersServed: monthBills.length,
 
           //                revenue: monthBills.reduce((sum, bill) => sum + bill.totalAmount, 0)
           //           }

@@ -8,38 +8,38 @@ import mongoose from "mongoose";
 export const createBill = async (req, res) => {
      try {
           console.log(req.body)
-          const {customerId, serviceIds} = req.body;
+          const { customerId, serviceIds } = req.body;
 
           const customer = await Customer.findById(
                customerId
           )
 
-          if(!customer) {
+          if (!customer) {
                return res.status(404).json({
-                    success : false,
-                    message : "Customer Not Found"
+                    success: false,
+                    message: "Customer Not Found"
                })
           }
-          
+
           ///////////////// Customer ID varification
 
-          if(!mongoose.Types.ObjectId.isValid(customerId)){
+          if (!mongoose.Types.ObjectId.isValid(customerId)) {
                return res.status(400).json({
-                    success : false,
-                    message : "Invalid customer id"
+                    success: false,
+                    message: "Invalid customer id"
                })
           }
 
           const services = await Service.find({
-               _id : {
-                    $in : serviceIds,
+               _id: {
+                    $in: serviceIds,
                },
           });
 
-          if(services.length === 0) {
+          if (services.length === 0) {
                return res.status(400).json({
-                    success : false,
-                    message : "No service selected!"
+                    success: false,
+                    message: "No service selected!"
                })
           }
 
@@ -49,10 +49,10 @@ export const createBill = async (req, res) => {
                (id) => !mongoose.Types.ObjectId.isValid(id)
           )
 
-          if(invalidServiceId) {
+          if (invalidServiceId) {
                return res.status(400).json({
-                    success : false,
-                    message : "Invalid Service ID"
+                    success: false,
+                    message: "Invalid Service ID"
                })
           }
 
@@ -63,33 +63,43 @@ export const createBill = async (req, res) => {
 
                return {
                     service: service._id,
-                    serviceName : service.serviceName,
-                    price : service.price
+                    serviceName: service.serviceName,
+                    price: service.price
                }
           })
 
           const bill = await Bill.create({
-               customer : customer._id,
-               worker : req.user._id,
-               services : billServices,
+               customer: customer._id,
+               worker: req.user._id,
+               services: billServices,
                totalAmount,
           })
 
-          customer.totalVisits += 1
+          // customer.totalVisits += 1
+          // customer.totalAmount += totalAmount
+          // await customer.save();
 
-          customer.totalAmount += totalAmount
-
-          await customer.save();
+          ////////// This is MongoDb auto update feature instead of updating step by step
+          // await Customer.findByIdAndUpdate(
+          //      customerId,
+          //      {
+          //           $inc: {
+          //                totalVisits: 1,
+          //                totalAmount: totalAmount,
+          //           },
+          //      },
+          //      { new: true }
+          // )
 
           res.status(201).json({
-               success : true,
-               data : bill
+               success: true,
+               data: bill
           })
 
      } catch (error) {
           res.status(500).json({
-               success : false,
-               message : error.message
+               success: false,
+               message: error.message
           })
      }
 }
@@ -102,23 +112,23 @@ export const createBill = async (req, res) => {
 export const getCustomerBills = async (req, res) => {
      try {
           const bills = await Bill.find({
-               customer : req.params. customerId
+               customer: req.params.customerId
           }).populate(
                "worker",
                "name"
           ).sort({
-               createAt : -1,
+               createdAt: -1,
           })
 
           res.json({
-               success : true,
-               data : bills
+               success: true,
+               data: bills
           })
 
      } catch (error) {
           res.status(500).json({
-               success : false,
-               message : error.message
+               success: false,
+               message: error.message
           })
      }
 }

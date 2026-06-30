@@ -8,6 +8,7 @@ import ProtectedRoute from "../components/common/ProtectedRoute.jsx";
 import CreateBillPage from "../pages/CreateBillPage.jsx";
 import BillingHistoryPage from "../pages/BillingHistoryPage.jsx";
 import DashboardLayout from "../layouts/DashboardLayout.jsx";
+import CustomerDetailsPage from "../pages/CustomerDetailsPage.jsx";
 
 
 const AppRoutes = () => {
@@ -68,6 +69,17 @@ const AppRoutes = () => {
                          <ProtectedRoute>
                               <DashboardLayout>
                                    <BillingHistoryPage />
+                              </DashboardLayout>
+                         </ProtectedRoute>
+                    }
+               />
+
+               <Route 
+                    path="/customers/:id"
+                    element = {
+                         <ProtectedRoute>
+                              <DashboardLayout>
+                                   <CustomerDetailsPage />
                               </DashboardLayout>
                          </ProtectedRoute>
                     }

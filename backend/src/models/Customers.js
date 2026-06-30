@@ -45,6 +45,11 @@ const customerSchema = new mongoose.Schema(
                default : 0,
           },
 
+          totalAmount : {
+               type : Number,
+               default : 0,
+          },
+
           active : {
                type : Boolean,
                default : true

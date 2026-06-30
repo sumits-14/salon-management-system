@@ -24,7 +24,7 @@ export const createCustomer = async (req, res) => {
 
           const customer = await Customer.create({
                customerName: formattedName,
-               mobileNumber
+               mobileNumber,
           })
 
           res.status(201).json({
@@ -53,17 +53,56 @@ export const createCustomer = async (req, res) => {
 
 export const getCustomers = async (req, res) => {
      try {
-          const customer = await Customer.find({
-               active: true
-          }).sort({
-               createdAt: -1
-          })
+          const customers = await Customer.aggregate([
+               {
+                    $match : {
+                         active:true,
+                    },
+               },
+               {
+                    $lookup : {
+                         from : "bills",
+                         localField : "_id",
+                         foreignField : "customer",
+                         as : "bills",
+                    },
+               },
+               {
+                    $addFields : {
+                         totalVisits : {
+                              $size : "$bills",
+                         },
+                         totalAmount : {
+                              $sum : "$bills.totalAmount",
+                         },
+                    },
+               },
+               {
+                    $project : {
+                         bills : 0,
+                    },
+               },
+               {
+                    $sort : {
+                         createdAt : -1,
+                    },
+               },
+          ]);
 
           res.json({
-               success: true,
-               data: customer
-          });
+               success : true,
+               data : customers,
+          })
 
+          // const customer = await Customer.find({
+          //      active: true
+          // }).sort({
+          //      createdAt: -1
+          // })
+          // res.json({
+          //      success: true,
+          //      data: customer
+          // });
      } catch (error) {
           res.status(500).json({
                success: false,
@@ -176,12 +215,22 @@ export const updateCustomer = async (req, res) => {
 
 export const deleteCustomer = async (req, res) => {
      try {
-          await Customer.findByIdAndDelete(
+          // await Customer.findByIdAndDelete(
+          //      req.params.id,
+          //      {
+          //           active: false
+          //      }
+          // )
+
+          await Customer.findByIdAndUpdate(
                req.params.id,
                {
-                    active: false
+                    active : false
+               },
+               {
+                    new : true
                }
-          )
+          );
 
           res.json({
                success: true,
