@@ -5,7 +5,7 @@ export const getCustomers = () => {
 }
 
 export const getCustomerById = (id) => {
-     return axiosInstance.get(`/customers?${id}`)
+     return axiosInstance.get(`/customers/${id}`)
 }
 
 export const createCustomer = (data) => {

@@ -148,7 +148,7 @@ export const searchCustomerByMobile = async (req, res) => {
 export const singleCustomer = async (req, res) => {
      try {
           const customer = await Customer.findById(req.params.id)
-
+          // console.log(req.params)
           if (!customer) {
                res.status(500).json({
                     success: false,

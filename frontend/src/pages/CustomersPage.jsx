@@ -1,17 +1,26 @@
 import { useEffect, useState, useMemo } from "react"
-import { Row, Col, Button } from "react-bootstrap"
-import {createCustomer, getCustomers, updateCustomer } from "../api/customerApi.js"
+import { Row, Col, Button, Spinner } from "react-bootstrap"
+// import {createCustomer, getCustomers, updateCustomer, deleteCustomer } from "../api/customerApi.js"
 import CustomerSearch from "../components/customers/CustomerSearch.jsx"
 import CustomerTable from "../components/customers/CustomerTable.jsx"
 import CustomerForm from "../components/customers/CustomerForm.jsx"
 // import { createCustomer, updateCustomer } from "../api/customerApi.js"
 import { showSuccess, showError } from "../utils/toast.js"
 // import formatCurrency from "../utils/formatCurrency.js"
+import useCustomers from "../hooks/useCustomers.js"
 
 
 const CustomersPage = () => {
 
-     const [customers, setCustomers] = useState([])
+     // const [customers, setCustomers] = useState([])
+     const {   
+               customers, 
+               loading, 
+               refreshCustomers, 
+               createCustomer, 
+               updateCustomer, 
+               deleteCustomer
+          } = useCustomers()
      const [search, setSearch] = useState('')
      const [showModal, setShowModal] = useState(false)
      const [selectedCustomer, setSelectedCustomer] = useState(null)
@@ -27,21 +36,21 @@ const CustomersPage = () => {
           })
      }, [customers, search])
 
-     useEffect(() => {
-          fetchCustomers();
-     }, []);
+     // useEffect(() => {
+     //      fetchCustomers();
+     // }, []);
 
-     const fetchCustomers = async () => {
-          try {
-               const response = await getCustomers();
+     // const fetchCustomers = async () => {
+     //      try {
+     //           const response = await getCustomers();
 
-               setCustomers(response.data.data)
-          } catch (error) {
-               showError(
-                    "Unable to load customers"
-               )
-          }
-     }
+     //           setCustomers(response.data.data)
+     //      } catch (error) {
+     //           showError(
+     //                "Unable to load customers"
+     //           )
+     //      }
+     // }
 
      const handleSaveCustomer = async(customerData) => {
           try {
@@ -59,13 +68,18 @@ const CustomersPage = () => {
                }
 
                handleCloseModal()
-               fetchCustomers()
+               // fetchCustomers()
+               refreshCustomers()
 
           } catch (error) {
                showError(
                     error.response?.data?.message || "Unable to add customer ❌"
                )
           }
+     }
+
+     if(loading) {
+          return <Spinner />
      }
 
      const handleEditCustomer = (customer) => {
