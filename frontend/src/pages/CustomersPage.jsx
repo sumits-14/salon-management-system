@@ -36,9 +36,9 @@ const CustomersPage = () => {
           })
      }, [customers, search])
 
-     // useEffect(() => {
-     //      fetchCustomers();
-     // }, []);
+     useEffect(() => {
+          refreshCustomers()
+     }, []);
 
      // const fetchCustomers = async () => {
      //      try {
