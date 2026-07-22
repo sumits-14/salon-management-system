@@ -96,7 +96,16 @@ export const loginUser = async (req, res) => {
 ////////////// Get Logged-In User
 
 export const getMe = async(req, res) => {
-     res.json(req.json)
+     const {_id, name, username, role} = req.user
+     res.json({
+          success : true,
+          user : {
+               id : _id,
+               name,
+               username,
+               role
+          }
+     })
 }
 
 

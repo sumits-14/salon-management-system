@@ -19,8 +19,6 @@ const LoginPage = () => {
 
           try {
                const response = await loginUser({ username, password });
-
-               // console.log(response.data)
                const loggedInUser = response.data.user
 
                login(
@@ -28,19 +26,11 @@ const LoginPage = () => {
                     response.data.token
                );
 
-               // toast.success(
-               //      `Welcome ${response.data.name}`
-               // )
-
-               // showSuccess(`Welcome ${response.data.user.name}`)
                showSuccess(`Welcome ${loggedInUser.name}`)
 
                navigate('/dashboard')
 
           } catch (error) {
-               // toast.error(
-               //      error.response?.data?.message || "Login failed!"
-               // )
                showError("Login Failed")
           }
      }

@@ -61,10 +61,11 @@ export const getServices = async (req, res) => {
 export const updateServices = async (req, res) => {
      try {
           const service = await Service.findByIdAndUpdate(
-               req.body,
                req.params.id,
+               req.body,
                {
-                    new : true
+                    new : true,
+                    // runValidators : true
                }
           );
 
@@ -99,12 +100,15 @@ export const deleteService = async (req, res) => {
 
           if(!service) {
                return res.status(404).json({
+                    success : false,
                     message : "Service not found!"
                })
           }
 
           res.json({
-               message : "Service deactivated!"
+               success : true,
+               message : "Service deactivated!",
+               data : service
           })
 
      } catch(error) {

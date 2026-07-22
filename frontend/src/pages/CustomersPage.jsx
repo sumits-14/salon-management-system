@@ -1,25 +1,21 @@
 import { useEffect, useState, useMemo } from "react"
 import { Row, Col, Button, Spinner } from "react-bootstrap"
-// import {createCustomer, getCustomers, updateCustomer, deleteCustomer } from "../api/customerApi.js"
 import CustomerSearch from "../components/customers/CustomerSearch.jsx"
 import CustomerTable from "../components/customers/CustomerTable.jsx"
 import CustomerForm from "../components/customers/CustomerForm.jsx"
-// import { createCustomer, updateCustomer } from "../api/customerApi.js"
 import { showSuccess, showError } from "../utils/toast.js"
-// import formatCurrency from "../utils/formatCurrency.js"
 import useCustomers from "../hooks/useCustomers.js"
 
 
 const CustomersPage = () => {
 
-     // const [customers, setCustomers] = useState([])
      const {   
-               customers, 
-               loading, 
-               refreshCustomers, 
-               createCustomer, 
-               updateCustomer, 
-               deleteCustomer
+          customers, 
+          loading, 
+          refreshCustomers, 
+          addCustomer,
+          editCustomer, 
+          removeCustomer,
           } = useCustomers()
      const [search, setSearch] = useState('')
      const [showModal, setShowModal] = useState(false)
@@ -40,36 +36,20 @@ const CustomersPage = () => {
           refreshCustomers()
      }, []);
 
-     // const fetchCustomers = async () => {
-     //      try {
-     //           const response = await getCustomers();
-
-     //           setCustomers(response.data.data)
-     //      } catch (error) {
-     //           showError(
-     //                "Unable to load customers"
-     //           )
-     //      }
-     // }
-
      const handleSaveCustomer = async(customerData) => {
           try {
-               // await createCustomer(customerData)
-               // showSuccess("Customer added successfully")
-               // setShowModal(false)
                if(selectedCustomer) {
-                    await updateCustomer(selectedCustomer._id, customerData);
+                    await editCustomer(selectedCustomer._id, customerData);
 
                     showSuccess("Customer updated successfully ✅")
                } else{
-                    await createCustomer(customerData)
+                    await addCustomer(customerData)
 
                     showSuccess("Customer added successfully 🎉")
                }
 
                handleCloseModal()
-               // fetchCustomers()
-               refreshCustomers()
+               // refreshCustomers()
 
           } catch (error) {
                showError(
@@ -78,8 +58,17 @@ const CustomersPage = () => {
           }
      }
 
-     if(loading) {
-          return <Spinner />
+     if(loading) {  
+          return (
+               <div className="text-center mt-5">
+                    <Spinner animation="border"/>
+               </div>
+          )
+     }
+
+     const handleAddCustomer = () => {
+          setSelectedCustomer(null);
+          setShowModal(true)
      }
 
      const handleEditCustomer = (customer) => {
@@ -102,7 +91,8 @@ const CustomersPage = () => {
                     </Col>
 
                     <Col className="text-end">
-                         <Button onClick={() => setShowModal(true)}>
+                         {/* <Button onClick={() => setShowModal(true)}> */}
+                         <Button onClick={handleAddCustomer}>
                               Add Customer
                          </Button>
                     </Col>
@@ -121,7 +111,7 @@ const CustomersPage = () => {
                <CustomerForm 
                     show={showModal}
                     handleClose={handleCloseModal}
-                    onSubmitCustomer={handleSaveCustomer}
+                    handleSave={handleSaveCustomer}
                     customer={selectedCustomer}
                />
           </>

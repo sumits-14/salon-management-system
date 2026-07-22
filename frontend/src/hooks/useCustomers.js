@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { getCustomers, getCustomerById, createCustomer, updateCustomer, deleteCustomer } from "../api/customerApi.js";
 import { showError } from "../utils/toast.js";
 import { data } from "react-router-dom";
-import { response } from "express";
 
 // const useCustomers = () => {
 const useCustomers = () => {
@@ -66,11 +65,11 @@ const useCustomers = () => {
 
      return {
           customers,
-          customer,
+          // customer,
           error,
           loading,
           refreshCustomers,
-          getCustomer,
+          // getCustomer,
           addCustomer,
           editCustomer,
           removeCustomer,

@@ -21,10 +21,10 @@ const useCustomer = (customerId) => {
           }
      };
 
-     const editCustomer = async (customerData) => {
-          const response = await updateCustomer(customerId, customerData);
+     const editCustomer = async (data) => {
+          const response = await updateCustomer(customerId, data);
           await refreshCustomer();
-          return response.data.data
+          return response.data.data;
      }
 
      useEffect(() => {

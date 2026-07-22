@@ -6,6 +6,10 @@ const AuthContext = createContext()
 
 export const AuthProvider = ({ children }) => {
      const [user, setUser] = useState(null);
+     // const [user, setUser] = useState(() => {
+     //      const savedUser = localStorage.getItem("user")
+     //      return savedUser ? JSON.parse(savedUser) : null
+     // });
      const [token, setToken] = useState(
           localStorage.getItem(
                "token"
@@ -22,29 +26,34 @@ export const AuthProvider = ({ children }) => {
                     }
 
                     const response = await getCurrentUser();
-
-                    setUser(response.data);
-
+                    
+                    setUser(response.data.user);
+                    
                } catch (error) {
                     console.error(error);
+                    
+                    // localStorage.removeItem("token")
+                    // setUser(null)
+                    // setToken(null)
 
-                    localStorage.removeItem("token")
-
-                    setUser(null)
-                    setToken(null)
+                    logout()
                } finally {
                     setLoading(false)
                }
           };
           loadUser()
      }, [token])
-
+     
      const login = (userData, authToken) => {
+          console.log("User :", userData);
+          console.log("Token: ", authToken)
           setUser(userData);
           setToken(authToken);
           localStorage.setItem(
+               // "user",
                "token",
-               authToken
+               authToken,
+               // JSON.stringify(userData)
           )  
      }
 

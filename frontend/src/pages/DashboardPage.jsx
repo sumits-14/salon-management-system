@@ -1,32 +1,25 @@
-import { useEffect, useState } from "react"
+import { use, useEffect } from "react"
 import { Row, Col, Card, Spinner } from "react-bootstrap"
-import { getWorkerDashboard } from "../api/dashboardApi.js"
 import formatCurrency from "../utils/formatCurrency.js"
-import { showError } from "../utils/toast.js"
 import { useAuth } from "../context/AuthContext.jsx"
+import useDashboard from "../hooks/useDashboard.js"
+
 
 const DashboardPage = () => {
-     const [dashboardData, setDashboardData] = useState(null)
-     const [loading, setLoading] = useState(true)
-     const { user } = useAuth()
+     
+     const {
+          dashboard,
+          loading,
+          refreshDashboard,
+     } = useDashboard()
 
+     const { user } = useAuth()
+     // console.log("user: ", user)
+     // console.log(localStorage.getItem("user"));
      useEffect(() => {
-          fetchDashboard()
+          refreshDashboard()
      }, [])
 
-     const fetchDashboard = async () => {
-          try {
-               const response = await getWorkerDashboard()
-
-               setDashboardData(
-                    response.data
-               )
-          } catch (error) {
-               showError('Failed to lead dashboard!')
-          } finally {
-               setLoading(false)
-          }
-     };
 
      if (loading) {
           return (
@@ -38,11 +31,26 @@ const DashboardPage = () => {
           )
      }
 
+     const getGreeting = () => {
+          const hour = new Date().getHours()
+          if(hour < 12) return 'Good Morning'
+          if(hour < 17) return 'Good Afternoon'
+          return 'Good Evening'
+     }
+
      return (
           <>
                <h2 className="mb-4">Dashboard</h2>
-               <h2>Welcome, {" "}{user?.name}</h2>
-               <p>Role: {" "}{user?.role}</p>
+               <h2>{getGreeting()}, {" "}{user?.name}👋🏼</h2>
+               <p className="text-muted">
+                    {new Date().toLocaleDateString('en-IN', {
+                         weekday : 'long',
+                         day : 'numeric',
+                         month : 'long',
+                         year : 'numeric'
+                    })}
+               </p>
+               <p className="text-muted">Role: {" "}{user?.role}</p>
 
                <Row>
                     <Col md={3}>
@@ -50,7 +58,7 @@ const DashboardPage = () => {
                               <Card.Body>
                                    <h6>Today's Customers</h6>
 
-                                   <h3>{dashboardData?.today?.customers}</h3>
+                                   <h3>{dashboard?.today?.customers}</h3>
                               </Card.Body>
                          </Card>
                     </Col>
@@ -62,7 +70,7 @@ const DashboardPage = () => {
 
                                    <h3>
                                         {
-                                             formatCurrency(dashboardData?.today?.revenue || 0)
+                                             formatCurrency(dashboard?.today?.revenue || 0)
                                         }
                                    </h3>
                               </Card.Body>
@@ -75,7 +83,7 @@ const DashboardPage = () => {
                                    <h6>Week Revenue</h6>
                                    <h3>
                                         {
-                                             formatCurrency(dashboardData?.week?.revenue || 0)
+                                             formatCurrency(dashboard?.week?.revenue || 0)
                                         }
                                    </h3>
                               </Card.Body>
@@ -88,7 +96,7 @@ const DashboardPage = () => {
                                    <h6>Month Revenue</h6>
                                    <h3>
                                         {
-                                             formatCurrency(dashboardData?.month?.revenue || 0)
+                                             formatCurrency(dashboard?.month?.revenue || 0)
                                         }
                                    </h3>
                               </Card.Body>

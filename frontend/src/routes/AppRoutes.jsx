@@ -85,6 +85,11 @@ const AppRoutes = () => {
                     }
                />
 
+               {/* <Route
+                    path="/services/:id"
+                    element={<ServiceDetailesPage />}
+               /> */}
+
                <Route 
                     path="*"
                     element = {

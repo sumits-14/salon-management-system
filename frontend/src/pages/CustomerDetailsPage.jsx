@@ -1,70 +1,37 @@
 import { useState, useEffect } from 'react'
-import { getCustomerById, getCustomers } from '../api/customerApi.js'
-import { getCustomerBills } from '../api/billApi'
-import { showError, showSuccess } from '../utils/toast.js'
 import { useNavigate, useParams } from "react-router-dom"
-import { Spinner, Alert, Row, Col, Button, Badge } from 'react-bootstrap'
+import { Spinner, Alert, Row, Col, Button, } from 'react-bootstrap'
+import { showError, showSuccess } from '../utils/toast.js'
+import { useCustomer, useCustomers, useBills} from '../hooks'
 import CustomerInfoCard from '../components/customers/CustomerInfoCard.jsx'
 import CustomerStatsCard from '../components/customers/CustomerStatsCard.jsx'
 import CustomerActions from '../components/customers/CustomerActions.jsx'
 import CustomerBillHistory from '../components/customers/CustomerBillHistory.jsx'
 import CustomerForm from '../components/customers/CustomerForm.jsx'
-import { updateCustomer, deleteCustomer } from '../api/customerApi.js'
-import useCustomers from '../hooks/useCustomers.js'
-import useBills from '../hooks/useBills.js'
+
+// import { getCustomerById, getCustomers } from '../api/customerApi.js'
+// import { getCustomerBills } from '../api/billApi'
+// import useCustomers from '../hooks/useCustomers.js'
+// import useBills from '../hooks/useBills.js'
+// import useCustomer from '../hooks/useCustomer.js'
 
 
 const CustomerDetailsPage = () => {
-
-     const [customerData, setCustomerData] = useState({
-          // customer: null,
-          bills: [],
-     })
-     // const [loading, setLoading] = useState(true)
      const [showEditModal, setShowEditModal] = useState(false)
      const { id } = useParams()
      const navigate = useNavigate()
      const {
-          customers,
-          customer,
-          getCustomer,
-          addCustomer,
-          refreshCustomers,
-          createCustomer,
-          editCustomer,
           removeCustomer,
-          loading : customerLoading,
      } = useCustomers()
+     const {
+          customer,
+          loading : customerLoading,
+          editCustomer,
+     } = useCustomer(id)
      const {
           bills,
           loading : billsLoading,
-          refreshBills
      } = useBills(id)
-
-     useEffect(() => {
-          // fetchCustomerDetails();
-          getCustomer(id).catch(() => {
-               showError("Unable to load customer.")
-          })
-     }, [id])
-
-     const fetchCustomerDetails = async () => {
-          try {
-               const [customerResponse, billResponse] = await Promise.all([
-                    getCustomerById(id),
-                    getCustomerBills(id)
-               ]);
-
-               setCustomerData({
-                    customer: customerResponse.data.data,
-                    bills: billResponse.data.data
-               });
-          } catch (error) {
-               showError(error.response?.data?.message || "Unable to load customer.😕");
-          } finally {
-               setLoading(false)
-          }
-     };
 
      if(customerLoading || billsLoading) {
           return (
@@ -74,7 +41,7 @@ const CustomerDetailsPage = () => {
           );
      }
 
-     if (loading) {
+     if (customerLoading) {
           return (
                <div className='text-center mt-5'>
                     <Spinner animation='border' />
@@ -82,7 +49,6 @@ const CustomerDetailsPage = () => {
           )
      }
 
-     // if (!customerData.customer) {
      if (!customer) {
           return (
                <Alert>
@@ -91,13 +57,11 @@ const CustomerDetailsPage = () => {
           )
      }
 
-     const handleEdit = () => {
-          // console.log("Edit Customer")
-          setShowEditModal(true)
-     }
+     // const handleEdit = () => {
+     //      setShowEditModal(true)
+     // }
 
      const handleGenerateBill = () => {
-          // console.log("Generate Bill")
           navigate("/bills/create", {
                state : {
                     customerId : customer._id
@@ -106,19 +70,17 @@ const CustomerDetailsPage = () => {
      }
 
      const handleDeleteCustomer = async () => {
-          // console.log("Delete Customer")
           const confirmed = window.confirm("Deactivate this customer?");
 
           if(!confirmed) return;
 
           try {
-               // await deleteCustomer(customer._id)
                await removeCustomer(customer._id)
                showSuccess("Customer deleted successfully!")
 
                navigate("/customers");
           } catch (error) {
-               showError(error.response?.message || "Unable to delete customer");
+               showError(error.response?.data?.message || "Unable to delete customer");
           }
      };
 
@@ -128,12 +90,11 @@ const CustomerDetailsPage = () => {
 
      const handleUpdateCustomer = async (customerData) => {
           try {
-               // await updateCustomer(customer._id, customerData);
-               await editCustomer(customer._id, customerData);
+               await editCustomer(customerData);
 
                showSuccess("Customer updated successfully!")
                setShowEditModal(false);
-               fetchCustomerDetails()
+               // fetchCustomerDetails()
           } catch (error) {
                showError(error.response?.data?.message || "Unable to update customer")
           }
@@ -155,7 +116,6 @@ const CustomerDetailsPage = () => {
 
                <Row>
                     <Col lg={5}>
-                         {/* <CustomerInfoCard customer={customerData.customer} /> */}
                          <CustomerInfoCard customer={customer} />
                     </Col>
 
@@ -167,7 +127,6 @@ const CustomerDetailsPage = () => {
                <Row className='mt-3'>
                     <Col lg={8}>
                          <CustomerActions
-                              // onEdit={handleEdit}
                               onEdit={() => setShowEditModal(true)}
                               onGenerateBill={handleGenerateBill}
                               onDelete={handleDeleteCustomer}
@@ -183,10 +142,8 @@ const CustomerDetailsPage = () => {
 
                <CustomerForm 
                     show={showEditModal}
-                    // handleClose={handleCloseEdit}
-                    handleClose={() => setShowEditModal(false)}
+                    handleClose={handleCloseEdit}
                     handleSave={handleUpdateCustomer}
-                    // customer={customerData.customer}
                     customer={customer}
                />
           </>

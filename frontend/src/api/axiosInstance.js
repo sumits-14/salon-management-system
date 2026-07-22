@@ -1,5 +1,4 @@
 import axios from 'axios'
-// import { config } from 'next/dist/build/templates/pages';
 
 const axiosInstance = axios.create({
      baseURL : "http://localhost:5000/api"

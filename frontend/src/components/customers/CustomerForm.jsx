@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { Modal, Button, Form } from "react-bootstrap"
 
-const CustomerForm = ({ show, handleClose, onSubmitCustomer, customer = null }) => {
+const CustomerForm = ({ show, handleClose, handleSave, customer = null }) => {
 
      const [customerName, setCustomerName] = useState("")
      const [mobileNumber, setMobileNumber] = useState("")
@@ -20,7 +20,7 @@ const CustomerForm = ({ show, handleClose, onSubmitCustomer, customer = null }) 
      const onSubmit = (e) => {
           e.preventDefault()
 
-          onSubmitCustomer({
+          handleSave({
                customerName,
                mobileNumber
           })

@@ -5,12 +5,14 @@ import { showError, showSuccess } from "../utils/toast.js";
 const useServices = () => {
      const [services, setServices] = useState([])
      const [loading, setLoading] = useState(true)
+     const [error, setError] = useState(null)
 
      const refreshServices = async () => {
           try {
                const response = await getServices();
-               setServices(response.data.data)
+               setServices(response.data)
           } catch (error) {
+               setError(error)
                showError("Unable to load services!");
           } finally {
                setLoading(false)
@@ -29,19 +31,26 @@ const useServices = () => {
 
      const editService = async (id, data) => {
           await updateService(id, data)
+          await refreshServices()
           showSuccess("Service updated successfully!")
-          refreshServices()
      };
 
      const removeService = async (id) => {
-          await deleteService(id)
-          showSuccess("Service removed successfully!")
-          refreshServices()
+          try {
+               await deleteService(id)
+               showSuccess("Service removed successfully!")
+               await refreshServices()
+          } catch (error) {
+               showError("Unable to delete service!")
+          }
      };
+
+     // console.log("Hook returning:", services);
 
      return {
           services,
           loading,
+          error,
           refreshServices,
           addService,
           editService,

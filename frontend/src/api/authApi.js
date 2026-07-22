@@ -13,4 +13,3 @@ export const getCurrentUser = () => {
      )
 }
 
-////////////////// src/context/AuthContext.jsx

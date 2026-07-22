@@ -5,12 +5,14 @@ import { showError } from "../utils/toast.js";
 const useDashboard = () => {
      const [dashboard, setDashboard] = useState(null)
      const [loading, setLoading] = useState(true)
+     const [error, setError] = useState(null)
 
      const refreshDashboard = async () => {
           try {
                const response = await getWorkerDashboard()
                setDashboard(response.data)
           } catch (error) {
+               setError(null)
                showError("Unable to load dashboard");
           } finally {
                setLoading(false)
@@ -24,6 +26,7 @@ const useDashboard = () => {
      return {
           dashboard,
           loading,
+          error,
           refreshDashboard
      };
 }
