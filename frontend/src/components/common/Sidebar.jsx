@@ -63,7 +63,7 @@ const Sidebar = () => {
                </NavLink>
 
                <NavLink
-                    to = "/bills/create"
+                    to = "/customers/${customer._id}/create-bill"
                     className = {({isActive}) => `nav-link ${
                          isActive ? 'bg-primary text-white rounded' : 'text-white'
                     }`}

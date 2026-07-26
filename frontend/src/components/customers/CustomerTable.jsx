@@ -2,7 +2,7 @@ import { Table, Button } from "react-bootstrap"
 import formatCurrency from '../../utils/formatCurrency.js'
 import { useNavigate } from "react-router-dom"
 
-const CustomerTable = ({ customers, onEdit }) => {
+const CustomerTable = ({ customers, onEdit, onDelete }) => {
 
      const navigate = useNavigate()
 
@@ -73,6 +73,7 @@ const CustomerTable = ({ customers, onEdit }) => {
                                                   variant="danger"
                                                   size="sm"
                                                   className="me-2"
+                                                  onClick={onDelete}
                                              >
                                                   Delete
                                              </Button>

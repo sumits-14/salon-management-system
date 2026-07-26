@@ -57,16 +57,9 @@ const CustomerDetailsPage = () => {
           )
      }
 
-     // const handleEdit = () => {
-     //      setShowEditModal(true)
-     // }
-
      const handleGenerateBill = () => {
-          navigate("/bills/create", {
-               state : {
-                    customerId : customer._id
-               }
-          })
+          console.log("Customer", customer)
+          navigate(`/customers/${customer._id}/create-bill`);
      }
 
      const handleDeleteCustomer = async () => {
@@ -78,7 +71,8 @@ const CustomerDetailsPage = () => {
                await removeCustomer(customer._id)
                showSuccess("Customer deleted successfully!")
 
-               navigate("/customers");
+               navigate("/customers/");
+               // navigate(`/customers/${customer._id}/create-bill`);
           } catch (error) {
                showError(error.response?.data?.message || "Unable to delete customer");
           }

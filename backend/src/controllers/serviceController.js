@@ -65,7 +65,7 @@ export const updateServices = async (req, res) => {
                req.body,
                {
                     new : true,
-                    // runValidators : true
+                    runValidators : true
                }
           );
 

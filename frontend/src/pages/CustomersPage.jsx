@@ -4,7 +4,8 @@ import CustomerSearch from "../components/customers/CustomerSearch.jsx"
 import CustomerTable from "../components/customers/CustomerTable.jsx"
 import CustomerForm from "../components/customers/CustomerForm.jsx"
 import { showSuccess, showError } from "../utils/toast.js"
-import useCustomers from "../hooks/useCustomers.js"
+// import useCustomers from "../hooks/useCustomers.js"
+import {useCustomer, useCustomers} from "../hooks"
 
 
 const CustomersPage = () => {
@@ -17,6 +18,12 @@ const CustomersPage = () => {
           editCustomer, 
           removeCustomer,
           } = useCustomers()
+
+     const {
+          customer,
+          loading : customerLoading,
+          // editCustomer,
+     } = useCustomer()
      const [search, setSearch] = useState('')
      const [showModal, setShowModal] = useState(false)
      const [selectedCustomer, setSelectedCustomer] = useState(null)
@@ -81,6 +88,22 @@ const CustomersPage = () => {
           setSelectedCustomer(null)
      }
 
+     const handleDeleteCustomer = async () => {
+          const confirmed = window.confirm("Deactivate this customer?");
+
+          if(!confirmed) return;
+          
+          try {
+               await removeCustomer(customer._id)
+               showSuccess("Customer deleted successfully!")
+
+               // navigate("/customers/");
+               // navigate(`/customers/${customer._id}/create-bill`);
+          } catch (error) {
+               showError(error.response?.data?.message || "Unable to delete customer");
+          }
+     };
+
      return (
           <>
                <Row className="mb-3">
@@ -106,6 +129,7 @@ const CustomersPage = () => {
                <CustomerTable
                     customers={filteredCustomers}
                     onEdit={handleEditCustomer}
+                    onDelete={handleDeleteCustomer}
                />
 
                <CustomerForm 

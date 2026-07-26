@@ -16,12 +16,12 @@ const AppRoutes = () => {
           <Routes>
                <Route
                     path="/login"
-                    element = {<LoginPage />}
+                    element={<LoginPage />}
                />
 
-               <Route 
+               <Route
                     path="/dashboard"
-                    element = {
+                    element={
                          <ProtectedRoute>
                               <DashboardLayout>
                                    <DashboardPage />
@@ -30,9 +30,9 @@ const AppRoutes = () => {
                     }
                />
 
-               <Route 
+               <Route
                     path="/customers"
-                    element = {
+                    element={
                          <ProtectedRoute>
                               <DashboardLayout>
                                    <CustomersPage />
@@ -41,9 +41,9 @@ const AppRoutes = () => {
                     }
                />
 
-               <Route 
+               <Route
                     path="/services"
-                    element = {
+                    element={
                          <ProtectedRoute>
                               <DashboardLayout>
                                    <ServicesPage />
@@ -52,9 +52,21 @@ const AppRoutes = () => {
                     }
                />
 
-               <Route 
+               {/* <Route
                     path="/bills/create"
-                    element = {
+                    // path="/customers/:customerId/create"
+                    element={
+                         <ProtectedRoute>
+                              <DashboardLayout>
+                                   <CreateBillPage />
+                              </DashboardLayout>
+                         </ProtectedRoute>
+                    }
+               /> */}
+
+               <Route
+                    path="/customers/:customerId/create-bill"
+                    element={
                          <ProtectedRoute>
                               <DashboardLayout>
                                    <CreateBillPage />
@@ -63,7 +75,7 @@ const AppRoutes = () => {
                     }
                />
 
-               <Route 
+               <Route
                     path="/bills/history"
                     element={
                          <ProtectedRoute>
@@ -74,9 +86,9 @@ const AppRoutes = () => {
                     }
                />
 
-               <Route 
+               <Route
                     path="/customers/:id"
-                    element = {
+                    element={
                          <ProtectedRoute>
                               <DashboardLayout>
                                    <CustomerDetailsPage />
@@ -90,9 +102,9 @@ const AppRoutes = () => {
                     element={<ServiceDetailesPage />}
                /> */}
 
-               <Route 
+               <Route
                     path="*"
-                    element = {
+                    element={
                          <NotFoundPage />
                     }
                />

@@ -40,5 +40,5 @@ const useCustomer = (customerId) => {
      };
 };
 
-export default useCustomer
+export default useCustomer;
 
