@@ -58,7 +58,6 @@ const CustomerDetailsPage = () => {
      }
 
      const handleGenerateBill = () => {
-          console.log("Customer", customer)
           navigate(`/customers/${customer._id}/create-bill`);
      }
 

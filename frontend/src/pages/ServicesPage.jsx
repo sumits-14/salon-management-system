@@ -5,6 +5,7 @@ import ServiceSearch from "../components/services/ServiceSearch.jsx";
 import ServiceForm from "../components/services/ServiceForm.jsx";
 import ServiceTable from "../components/services/ServiceTable.jsx";
 import { useNavigate } from "react-router-dom";
+import { showError } from "../utils/toast.js";
 
 const ServicesPage = () => {
      // const {
@@ -52,28 +53,30 @@ const ServicesPage = () => {
           )
      }
 
-     const handleViewService = (service) => {
-          navigate(`/services/${service._id}`)
-     }
+     // const handleViewService = (service) => {
+     //      navigate(`/services/${service._id}`)
+     // }
 
      const handleSaveService = async (serviceData) => {
           try {
                console.log("Selected Service:", selectedService);
                console.log("Service Data:", serviceData);
                if(selectedService) {
-                    console.log('Editing.....')
+                    // console.log('Editing.....')
                     await editService(
                          selectedService._id,
                          serviceData
                     );
                } else {
-                    console.log('Escaping...')
+                    // console.log('Escaping...')
                     await addService(serviceData)
                }
                setSelectedService(null)
                setShowModal(false)
           } catch (error) {
                console.log(error)
+               showError(`Only Admin can add service!
+                    Please ask admin to add service...`)
           }
      };
 

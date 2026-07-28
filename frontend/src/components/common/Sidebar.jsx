@@ -68,7 +68,7 @@ const Sidebar = () => {
                          isActive ? 'bg-primary text-white rounded' : 'text-white'
                     }`}
                >
-                    Create Bill
+                    Staff
                </NavLink>
 
                <NavLink

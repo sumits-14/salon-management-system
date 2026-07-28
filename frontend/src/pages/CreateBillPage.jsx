@@ -4,6 +4,7 @@ import useBillCreation from '../hooks/useBillCreation.js';
 import BillCustomerCard from '../components/bills/BillCustomerCard.jsx';
 import BillServiceTable from '../components/bills/BillServiceTable.jsx';
 import BillSummaryCard from '../components/bills/BillSummaryCard.jsx';
+import { useNavigate } from 'react-router-dom';
 
 
 const CreateBillPage = () => {
@@ -14,9 +15,20 @@ const CreateBillPage = () => {
     services,
     selectedServices,
     handleServiceToggle,
+    paymentMethod,
+    setPaymentMethod,
+    submitBill,
     loading,
     error,
   } = useBillCreation(customerId)
+  const navigate = useNavigate();
+
+  const handleCreateBill = async () => {
+    const success = await submitBill()
+    if(success) {
+      navigate(`/customers/${customerId}`)
+    }
+  }
 
   if (loading) {
     return (
@@ -43,7 +55,12 @@ const CreateBillPage = () => {
         <Col lg={4}>
           <BillCustomerCard customer={customer} />
 
-          <BillSummaryCard selectedServices={selectedServices}/>
+          <BillSummaryCard 
+            selectedServices={selectedServices}
+            paymentMethod={paymentMethod}
+            setPaymentMethod={setPaymentMethod}
+            onCreateBill={handleCreateBill}
+          />
         </Col>
 
         {/* <Col lg={4}>

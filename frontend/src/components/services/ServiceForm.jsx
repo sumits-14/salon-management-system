@@ -90,9 +90,7 @@ const ServiceForm = ({ show,
                     </Modal.Footer>
 
                </Form>
-               <Modal.Body>
-                    Phase 3
-               </Modal.Body>
+               
           </Modal>
      )
 }

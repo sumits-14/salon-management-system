@@ -24,7 +24,24 @@ const userSchema = new mongoose.Schema(
                type : String,
                enum : ['admin', 'worker'],
                default : "worker",
+               required : true
           },
+
+          phone : {
+               type : Number,
+               required : true,
+               trim : true,
+          },
+
+          address : {
+               type : String,
+               trim : true,
+          },
+
+          active : {
+               type : Boolean,
+               default : true
+          }
      },
      {
           timestamps : true

@@ -6,13 +6,23 @@ import mongoose from "mongoose";
 //////////// Create customer Bill
 
 export const createBill = async (req, res) => {
+     // let session;
      try {
-          console.log(req.body)
-          const { customerId, serviceIds } = req.body;
+          const { customerId, serviceIds, paymentMethod } = req.body;
+          // session = await mongoose.startSession();
+          // session.startTransaction()
+
+          if (!mongoose.Types.ObjectId.isValid(customerId)) {
+               return res.status(400).json({
+                    success: false,
+                    message: "Invalid customer Id"
+               });
+          }
 
           const customer = await Customer.findById(
                customerId
           )
+          // ).session(session)
 
           if (!customer) {
                return res.status(404).json({
@@ -23,28 +33,21 @@ export const createBill = async (req, res) => {
 
           ///////////////// Customer ID varification
 
-          if (!mongoose.Types.ObjectId.isValid(customerId)) {
+          // if (!mongoose.Types.ObjectId.isValid(customerId)) {
+          //      return res.status(400).json({
+          //           success: false,
+          //           message: "Invalid customer id"
+          //      })
+          // }
+
+          if (!Array.isArray(serviceIds) || serviceIds.length === 0) {
                return res.status(400).json({
                     success: false,
-                    message: "Invalid customer id"
-               })
-          }
-
-          const services = await Service.find({
-               _id: {
-                    $in: serviceIds,
-               },
-          });
-
-          if (services.length === 0) {
-               return res.status(400).json({
-                    success: false,
-                    message: "No service selected!"
+                    message: "Please select at least one service",
                })
           }
 
           ////////////// Service Id varification
-
           const invalidServiceId = serviceIds.some(
                (id) => !mongoose.Types.ObjectId.isValid(id)
           )
@@ -55,6 +58,21 @@ export const createBill = async (req, res) => {
                     message: "Invalid Service ID"
                })
           }
+
+          const services = await Service.find({
+               _id: {
+                    $in: serviceIds,
+               },
+          })
+          // }).session(session);
+
+          if (services.length === 0) {
+               return res.status(400).json({
+                    success: false,
+                    message: "No service selected!"
+               });
+          }
+
 
           let totalAmount = 0;
 
@@ -69,34 +87,41 @@ export const createBill = async (req, res) => {
           })
 
           const bill = await Bill.create({
-               customer: customer._id,
-               worker: req.user._id,
-               services: billServices,
-               totalAmount,
-          })
+                         customer: customer._id,
+                         worker: req.user._id,
+                         services: billServices,
+                         totalAmount,
+                         paymentMethod,
+                    },
+          );
 
-          // customer.totalVisits += 1
-          // customer.totalAmount += totalAmount
-          // await customer.save();
+          await Customer.findByIdAndUpdate(
+               customerId,
+               {
+                    $inc: {
+                         totalVisits: 1,
+                         totalAmount: totalAmount,
+                    },
+               },
+               { new: true }
+               // { session, }
+          )
 
-          ////////// This is MongoDb auto update feature instead of updating step by step
-          // await Customer.findByIdAndUpdate(
-          //      customerId,
-          //      {
-          //           $inc: {
-          //                totalVisits: 1,
-          //                totalAmount: totalAmount,
-          //           },
-          //      },
-          //      { new: true }
-          // )
+          // await session.commitTransaction();
+          // session.endSession()
 
           res.status(201).json({
                success: true,
-               data: bill
+               data: bill[0]
           })
 
      } catch (error) {
+          // if (session) {
+          //      await session.abortTransaction();
+          //      session.endSession();
+          // }
+
+          // return res.status(500).json({
           res.status(500).json({
                success: false,
                message: error.message

@@ -1,31 +1,28 @@
 import { useState, useEffect } from "react";
 import { getCustomerById } from "../api/customerApi.js";
 import { getServices } from "../api/serviceApi.js";
-import {showError} from "../utils/toast.js"
+// import {showError} from "../utils/toast.js";
+import { createBill } from "../api/billApi.js";
+import { showSuccess, showError } from "../utils/toast.js";
 
 const useBillCreation = (customerId) => {
-     // console.log("useBillCreation Hook Running");
-     // console.log("Customer ID:", customerId);
      const [customer, setCustomer] = useState(null);
      const [services, setServices] = useState([]);
      const [loading, setLoading] = useState(true)
      const [error, setError] = useState(null)
      const [selectedServices, setSelectedServices] = useState([]);
+     const [paymentMethod, setPaymentMethod] = useState("Cash")
 
      const refreshData = async () => {
           try {
                setLoading(true)
-               
-               // console.log('Just Data -', getCustomerById)
+
                const [customerResponse, servicesResponse] = await Promise.all([
                     getCustomerById(customerId),
                     getServices()
                ])
-               // console.log(customerResponse);
-               
+              
                setCustomer(customerResponse.data.data)
-               // console.log('Just Data -',customerResponse.data)
-               // console.log('Data Ka Data -',customerResponse.data.data)
 
                const activeServices = servicesResponse.data.filter(
                     (service) => service.active
@@ -60,16 +57,38 @@ const useBillCreation = (customerId) => {
           }
      }
 
+     const submitBill = async () => {
+          
+          if(selectedServices.length === 0) {
+               showError("Please select atleast one service!");
+               return false
+          }
+          
+          try {
+               const billData = {
+                    customerId,
+                    // services : selectedServices.map(service => service._id),
+                    serviceIds : selectedServices.map(service => service._id),
+                    paymentMethod,
+               };
+
+               // console.log("Bill payload:", billData)
+
+               await createBill(billData);
+
+               showSuccess("Bill created successfully!")
+
+               return true;
+
+          } catch (error) {
+               console.error(error);
+               showError(error.response?.data?.message || "Unable to create Bill!");
+               return false;
+          }
+     }
+
      useEffect(() => {
-
-          // console.log("Inside useEffect")
-
           refreshData()
-          // if(customerId) {
-          //      // console.log("Calling refreshdata")
-          // }else {
-          //      console.log('Id Missing')
-          // }
      }, [customerId])
 
      return {
@@ -77,6 +96,9 @@ const useBillCreation = (customerId) => {
           services,
           selectedServices,
           handleServiceToggle,
+          paymentMethod,
+          setPaymentMethod,
+          submitBill,
           loading,
           error,
           refreshData,

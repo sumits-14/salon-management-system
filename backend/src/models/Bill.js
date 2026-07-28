@@ -26,9 +26,17 @@ const billSchema = new mongoose.Schema(
                }
           ],
 
+          
           totalAmount: {
                type: Number,
                required: true
+          },
+          
+          paymentMethod : {
+               type : String,
+               enum : ["Cash", "UPI", "Card"],
+               default : "Cash",
+               required : true     
           },
      },
 

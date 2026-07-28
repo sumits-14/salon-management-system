@@ -5,6 +5,7 @@ import serviceRoutes from './routes/serviceRoutes.js'
 import customerRoutes from './routes/customerRoutes.js'
 import billRoutes from './routes/billRoutes.js'
 import dashboardRoutes from './routes/dashboardRoutes.js'
+import staffRoutes from "./routes/staffRoutes.js"
 
 
 const app = express()
@@ -15,6 +16,11 @@ app.use(express.json())
 app.use(
      '/api/auth',
      authRoutes
+)
+
+app.use(
+     "/api/staff",
+     staffRoutes     
 )
 
 app.use(
