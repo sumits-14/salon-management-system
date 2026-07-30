@@ -6,11 +6,8 @@ import mongoose from "mongoose";
 //////////// Create customer Bill
 
 export const createBill = async (req, res) => {
-     // let session;
      try {
           const { customerId, serviceIds, paymentMethod } = req.body;
-          // session = await mongoose.startSession();
-          // session.startTransaction()
 
           if (!mongoose.Types.ObjectId.isValid(customerId)) {
                return res.status(400).json({
@@ -22,7 +19,6 @@ export const createBill = async (req, res) => {
           const customer = await Customer.findById(
                customerId
           )
-          // ).session(session)
 
           if (!customer) {
                return res.status(404).json({
@@ -30,15 +26,6 @@ export const createBill = async (req, res) => {
                     message: "Customer Not Found"
                })
           }
-
-          ///////////////// Customer ID varification
-
-          // if (!mongoose.Types.ObjectId.isValid(customerId)) {
-          //      return res.status(400).json({
-          //           success: false,
-          //           message: "Invalid customer id"
-          //      })
-          // }
 
           if (!Array.isArray(serviceIds) || serviceIds.length === 0) {
                return res.status(400).json({
@@ -64,7 +51,6 @@ export const createBill = async (req, res) => {
                     $in: serviceIds,
                },
           })
-          // }).session(session);
 
           if (services.length === 0) {
                return res.status(400).json({
@@ -87,12 +73,12 @@ export const createBill = async (req, res) => {
           })
 
           const bill = await Bill.create({
-                         customer: customer._id,
-                         worker: req.user._id,
-                         services: billServices,
-                         totalAmount,
-                         paymentMethod,
-                    },
+               customer: customer._id,
+               worker: req.user._id,
+               services: billServices,
+               totalAmount,
+               paymentMethod,
+          },
           );
 
           await Customer.findByIdAndUpdate(
@@ -104,24 +90,14 @@ export const createBill = async (req, res) => {
                     },
                },
                { new: true }
-               // { session, }
           )
-
-          // await session.commitTransaction();
-          // session.endSession()
 
           res.status(201).json({
                success: true,
-               data: bill[0]
+               data: bill
           })
 
      } catch (error) {
-          // if (session) {
-          //      await session.abortTransaction();
-          //      session.endSession();
-          // }
-
-          // return res.status(500).json({
           res.status(500).json({
                success: false,
                message: error.message
@@ -159,4 +135,123 @@ export const getCustomerBills = async (req, res) => {
 }
 
 
+///////////////// Get Bills
+
+export const getBills = async (req, res) => {
+     const {
+          worker,
+          paymentMethod,
+          from,
+          to,
+          search,
+     } = req.query;
+
+     const filter = {};
+
+     if (worker) {
+          filter.worker = worker;
+     }
+
+     if (paymentMethod) {
+          filter.paymentMethod = paymentMethod;
+     }
+
+     if (from || to) {
+          filter.createdAt = {}
+
+          if (from) {
+               filter.createdAt.$gte = new Date(from);
+          }
+
+          if (to) {
+               const endDate = new Date(to);
+               endDate.setHours(23, 59, 59, 999);
+
+               filter.createdAt.$lte = endDate;
+          }
+     }
+
+     if(search) {
+          const customers = await Customer.find({
+               customerName : {
+                    $regex : search,
+                    $options : "i",
+               },
+          }).select("_id");
+
+          filter.customer = {
+               $in : customers.map(customer => customer._id),
+          };
+     }
+
+     try {
+          const bills = await Bill.find(filter)
+               .populate(
+                    "customer",
+                    "customerName mobileNumber"
+               )
+               .populate(
+                    "worker",
+                    "name role"
+               )
+               .sort({
+                    createdAt: -1
+               })
+
+          res.status(200).json({
+               success: true,
+               count: bills.length,
+               data: bills,
+          });
+
+     } catch (error) {
+          res.status(500).json({
+               success: false,
+               message: error.message,
+          });
+     }
+}
+
+
+///////////////////// Get bill by ID
+
+export const getBillById = async (req, res) => {
+     try {
+          const { id } = req.params;
+          if (!mongoose.Types.ObjectId.isValid(id)) {
+               return res.status(400).json({
+                    success: false,
+                    message: "Invalid Bill ID",
+               });
+          }
+
+          const bill = await Bill.findById(id)
+               .populate(
+                    "customer",
+                    "customerName mobileNumber totalVisits totalAmount"
+               )
+               .populate(
+                    "worker",
+                    "name role"
+               );
+
+          if (!bill) {
+               return res.status(404).json({
+                    success: false,
+                    message: "Bill not found.",
+               });
+          }
+
+          res.status(200).json({
+               success: true,
+               data: bill,
+          });
+
+     } catch (error) {
+          res.status(500).json({
+               success: false,
+               message: error.message,
+          })
+     }
+}
 

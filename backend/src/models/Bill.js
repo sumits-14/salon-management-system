@@ -53,8 +53,3 @@ billSchema.index({
 const Bill = mongoose.model('Bill', billSchema)
 
 export default Bill
-
-
-
-
-

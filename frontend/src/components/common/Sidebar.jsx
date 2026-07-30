@@ -1,6 +1,6 @@
 import React from 'react'
 import { Nav, Button } from 'react-bootstrap'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext.jsx'
 import { showSuccess } from '../../utils/toast.js'
 
@@ -63,7 +63,8 @@ const Sidebar = () => {
                </NavLink>
 
                <NavLink
-                    to = "/customers/${customer._id}/create-bill"
+                    as={Link}
+                    to = "/staff"
                     className = {({isActive}) => `nav-link ${
                          isActive ? 'bg-primary text-white rounded' : 'text-white'
                     }`}

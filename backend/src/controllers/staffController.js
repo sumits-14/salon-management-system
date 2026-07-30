@@ -61,7 +61,7 @@ export const getStaff = async (req, res) => {
      try {
           const staff = await User.find({ active: true }, "-password").sort({
                // const staff = await User.find({}, "-password").soft({
-               createdAt: -1,
+               createdAt: 1,
           });
 
           // console.log(staff)
@@ -144,6 +144,13 @@ export const toggleStaffStatus = async (req, res) => {
      try {
           const { id } = req.params;
           const { active } = req.body;
+
+          if(req.user._id.toString() === id) {
+               return res.status(400).json({
+                    success : false,
+                    message : "You cannot deactivate your own account!💀"
+               })
+          }
 
           const staff = await User.findByIdAndUpdate(
                id,

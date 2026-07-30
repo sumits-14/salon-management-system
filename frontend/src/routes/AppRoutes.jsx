@@ -9,6 +9,7 @@ import CreateBillPage from "../pages/CreateBillPage.jsx";
 import BillingHistoryPage from "../pages/BillingHistoryPage.jsx";
 import DashboardLayout from "../layouts/DashboardLayout.jsx";
 import CustomerDetailsPage from "../pages/CustomerDetailsPage.jsx";
+import StaffPage from "../pages/StaffPage.jsx";
 
 
 const AppRoutes = () => {
@@ -52,18 +53,6 @@ const AppRoutes = () => {
                     }
                />
 
-               {/* <Route
-                    path="/bills/create"
-                    // path="/customers/:customerId/create"
-                    element={
-                         <ProtectedRoute>
-                              <DashboardLayout>
-                                   <CreateBillPage />
-                              </DashboardLayout>
-                         </ProtectedRoute>
-                    }
-               /> */}
-
                <Route
                     path="/customers/:customerId/create-bill"
                     element={
@@ -97,10 +86,16 @@ const AppRoutes = () => {
                     }
                />
 
-               {/* <Route
-                    path="/services/:id"
-                    element={<ServiceDetailesPage />}
-               /> */}
+               <Route 
+                    path="/staff"
+                    element={
+                         <ProtectedRoute>
+                              <DashboardLayout>
+                                   <StaffPage />
+                              </DashboardLayout>
+                         </ProtectedRoute>
+                    }
+               />
 
                <Route
                     path="*"
