@@ -3,3 +3,5 @@ export { default as useCustomers } from "./useCustomers";
 export { default as useBills } from "./useBills";
 export { default as useServices } from "./useServices";
 export { default as useDashboard } from "./useDashboard";
+export {default as useStaff } from "./useStaff";
+export {default as useBillingHistory} from "./useBillingHistory";
