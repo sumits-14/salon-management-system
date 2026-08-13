@@ -4,9 +4,11 @@ import { useBillingHistory, useStaff } from "../hooks";
 import BillingSearch from "../components/billing/BillingSearch.jsx";
 import BillingTable from "../components/billing/BillingTable.jsx";
 import BillDetailsModal from "../components/billing/BillDetailsModal.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
 
 const BillingHistoryPage = () => {
-
+  
+  const {user} = useAuth();
   const {
     bills,
     loading,
@@ -27,7 +29,7 @@ const BillingHistoryPage = () => {
   const {
     staff,
     loading : staffLoading,
-  } = useStaff();
+  } = useStaff(user?.role === "admin");
 
   const [showModal, setShowModal] = useState(false);
 
@@ -86,7 +88,9 @@ const BillingHistoryPage = () => {
               <BillingSearch 
                 filters={filters}
                 setFilters={setFilters}
-                staff={staff}
+                // staff={staff}
+                staff={user?.role === 'admin' ? staff : []}
+                showStaffFilter = {user?.role === 'admin'}
                 onSearch={handleSearch}
                 onReset={handleReset}
               />

@@ -16,81 +16,76 @@ const Sidebar = () => {
           navigate('/login')
      }
 
-  return (
-    <div className='p-3 text-white'>
-          <h4 className='mb-4'>
-               Salon Management
-          </h4>
+     return (
+          <div className='p-3 text-white'>
+               <h4 className='mb-4'>
+                    Salon Management
+               </h4>
 
-          <div className='mb-4'>
-               <strong>
-                    {user?.name}
-               </strong>
+               <div className='mb-4'>
+                    <strong>
+                         {user?.name}
+                    </strong>
 
-               <br />
+                    <br />
 
-               <small>
-                    {user?.role}
-               </small>
+                    <small>
+                         {user?.role}
+                    </small>
+               </div>
+
+               <Nav className='flex-column'>
+                    <NavLink
+                         to="/dashboard"
+                         className={({ isActive }) => `nav-link ${isActive ? 'bg-primary text-white rounded' : 'text-white'
+                              }`}
+                    >
+                         Dashboard
+                    </NavLink>
+
+                    <NavLink
+                         to="/customers"
+                         className={({ isActive }) => `nav-link ${isActive ? 'bg-primary text-white rounded' : 'text-white'
+                              }`}
+                    >
+                         Customers
+                    </NavLink>
+
+                    <NavLink
+                         to="/services"
+                         className={({ isActive }) => `nav-link ${isActive ? 'bg-primary text-white rounded' : 'text-white'
+                              }`}
+                    >
+                         Services
+                    </NavLink>
+
+                    {user?.role === 'admin' && (<NavLink
+                         as={Link}
+                         to="/staff"
+                         className={({ isActive }) => `nav-link ${isActive ? 'bg-primary text-white rounded' : 'text-white'
+                              }`}
+                    >
+                         Staff
+                    </NavLink>)}
+
+                    <NavLink
+                         to="/bills/history"
+                         className={({ isActive }) => `nav-link ${isActive ? 'bg-primary text-white rounded' : 'text-white'
+                              }`}
+                    >
+                         Billing History
+                    </NavLink>
+               </Nav>
+
+               <Button
+                    variant='danger'
+                    className='mt-4 w-100'
+                    onClick={handleLogout}
+               >
+                    Logout
+               </Button>
           </div>
-
-          <Nav className='flex-column'>
-               <NavLink 
-                    to = "/dashboard"
-                    className = {({isActive}) => `nav-link ${
-                         isActive ? 'bg-primary text-white rounded' : 'text-white'
-                    }`}     
-               >
-                    Dashboard
-               </NavLink>
-
-               <NavLink
-                    to = "/customers"
-                    className = {({isActive}) => `nav-link ${
-                         isActive ? 'bg-primary text-white rounded' : 'text-white'
-                    }`}
-               >
-                    Customers
-               </NavLink>
-
-               <NavLink
-                    to = "/services"
-                    className = {({isActive}) => `nav-link ${
-                         isActive ? 'bg-primary text-white rounded' : 'text-white'
-                    }`}
-               >
-                    Services
-               </NavLink>
-
-               <NavLink
-                    as={Link}
-                    to = "/staff"
-                    className = {({isActive}) => `nav-link ${
-                         isActive ? 'bg-primary text-white rounded' : 'text-white'
-                    }`}
-               >
-                    Staff
-               </NavLink>
-
-               <NavLink
-                    to = "/bills/history"
-                    className = {({isActive}) => `nav-link ${
-                         isActive ? 'bg-primary text-white rounded' : 'text-white'
-                    }`}
-               >
-                    Billing History
-               </NavLink>
-          </Nav>
-
-          <Button
-               variant='danger'
-               className='mt-4 w-100'
-               onClick={handleLogout}
-          >
-               Logout
-          </Button>
-    </div>
-  )
+     )
 }
 
 export default Sidebar

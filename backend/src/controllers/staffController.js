@@ -60,11 +60,9 @@ export const createStaff = async (req, res) => {
 export const getStaff = async (req, res) => {
      try {
           const staff = await User.find({ active: true }, "-password").sort({
-               // const staff = await User.find({}, "-password").soft({
                createdAt: 1,
           });
 
-          // console.log(staff)
           res.status(200).json({
                success: true,
                count: staff.length,

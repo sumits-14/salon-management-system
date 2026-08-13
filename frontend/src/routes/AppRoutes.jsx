@@ -10,6 +10,7 @@ import BillingHistoryPage from "../pages/BillingHistoryPage.jsx";
 import DashboardLayout from "../layouts/DashboardLayout.jsx";
 import CustomerDetailsPage from "../pages/CustomerDetailsPage.jsx";
 import StaffPage from "../pages/StaffPage.jsx";
+import AdminRoute from "./AdminRoute.jsx";
 
 
 const AppRoutes = () => {
@@ -17,9 +18,9 @@ const AppRoutes = () => {
           <Routes>
                <Route
                     path="/"
-                    element={<Navigate to="/login" replace/>}
+                    element={<Navigate to="/login" replace />}
                />
-               
+
                <Route
                     path="/login"
                     element={<LoginPage />}
@@ -91,13 +92,15 @@ const AppRoutes = () => {
                     }
                />
 
-               <Route 
+               <Route
                     path="/staff"
                     element={
                          <ProtectedRoute>
-                              <DashboardLayout>
-                                   <StaffPage />
-                              </DashboardLayout>
+                              <AdminRoute>
+                                   <DashboardLayout>
+                                        <StaffPage />
+                                   </DashboardLayout>
+                              </AdminRoute>
                          </ProtectedRoute>
                     }
                />

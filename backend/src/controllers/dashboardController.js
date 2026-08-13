@@ -69,14 +69,7 @@ export const getDashboard =
                     1
                )
 
-               console.log("Dashboard User:", {
-                    id : req.user._id,
-                    role : req.user.role,
-               })
-
                const workerId = req.user.role === 'admin' ? null : req.user._id;
-
-               console.log("Dashboard workerId:", workerId)
 
                const [todayStats, weekStats, monthStats] = await Promise.all([
                     getAnalytics(

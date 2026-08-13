@@ -6,8 +6,6 @@ const protect = async (req, res, next) => {
 
           const authHeader = req.headers.authorization;
 
-          // console.log("AUTH:", authHeader)
-
           if(!authHeader || !authHeader.startsWith("Bearer ")) {
                return res.status(401).json({
                     message : "Unauthorized!"
@@ -27,8 +25,10 @@ const protect = async (req, res, next) => {
 
           next();
      } catch(error) {
+          console.log("Auth Middleware Error")
           res.status(401).json({
-               message : "Invalid Token"
+               message : "Invalid Token",
+               error : error.message
           })
      }
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 import {Row, Col, Form, Button} from 'react-bootstrap';
+import { useAuth } from '../../context/AuthContext';
 
 const BillingSearch = ({
      filters,
@@ -7,6 +8,7 @@ const BillingSearch = ({
      staff,
      onSearch,
      onReset,
+     showStaffFilter,
 }) => {
 
      const handleChange = (e) => {
@@ -38,7 +40,7 @@ const BillingSearch = ({
                </Col>
 
                {/* Staff Filter */}
-               <Col md={2}>
+                    {showStaffFilter && (<Col md={2}>
                     <Form.Group>
                          <Form.Label>
                               Staff
@@ -63,7 +65,7 @@ const BillingSearch = ({
                               ))}
                          </Form.Select>
                     </Form.Group>
-               </Col>
+               </Col>)}
           
                {/* Payment Method */}
                <Col md={2}>
@@ -79,13 +81,13 @@ const BillingSearch = ({
                               <option value="">
                                    All
                               </option>
-                              <option value="">
+                              <option value="Cash">
                                    Cash
                               </option>
-                              <option value="">
+                              <option value="UPI">
                                    UPI
                               </option>
-                              <option value="">
+                              <option value="Card">
                                    Card
                               </option>
                          </Form.Select>

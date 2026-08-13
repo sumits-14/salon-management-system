@@ -4,8 +4,11 @@ import useStaff from "../hooks/useStaff.js";
 import StaffSearch from "../components/staff/StaffSearch.jsx";
 import StaffForm from "../components/staff/StaffForm.jsx";
 import StaffTable from "../components/staff/StaffTable.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
 
 const StaffPage = () => {
+
+  const {user} = useAuth()
 
   const {
     staff,
@@ -13,7 +16,7 @@ const StaffPage = () => {
     addStaff,
     editStaff,
     changeStaffStatus,
-  } = useStaff()
+  } = useStaff(user?.role === 'admin');
 
   const [showModal, setshowModal] = useState(false);
   const [selectedStaff, setSelectedStaff] = useState(null);

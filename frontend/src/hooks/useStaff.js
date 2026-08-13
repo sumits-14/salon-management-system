@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { getStaff, createStaff, updateStaff, toggleStaffStatus } from "../api/staffApi.js";
 import { showError, showSuccess } from "../utils/toast.js";
 
-const useStaff = () =>  {
+const useStaff = (enable = true) =>  {
   
      const [staff, setStaff] = useState([])
      const [loading, setLoading] = useState(true)
@@ -21,15 +21,19 @@ const useStaff = () =>  {
           } catch (error) {
                console.error(error);
                setError(error);
-               showError("Unable to load staff!");
+               showError(error.response?.data?.message || "Unable to load staff!");
           } finally {
                setLoading(false)
           }
      }
 
      useEffect(() => {
-          refreshStaff();
-     }, [])
+          if(enable) {
+               refreshStaff();
+          } else {
+               setLoading(false)
+          }
+     }, [enable])
 
      const addStaff = async (staffData) => {
           try {

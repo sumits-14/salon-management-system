@@ -148,9 +148,17 @@ export const getBills = async (req, res) => {
 
      const filter = {};
 
-     if (worker) {
-          filter.worker = worker;
+     if(req.user.role === 'worker') {
+          filter.worker = req.user._id;
+     } else if(req.user.role === 'admin') {
+          if(worker) {
+               filter.worker = worker;
+          }
      }
+
+     // if (worker) {
+     //      filter.worker = worker;
+     // }
 
      if (paymentMethod) {
           filter.paymentMethod = paymentMethod;
