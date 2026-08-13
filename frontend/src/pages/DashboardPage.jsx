@@ -1,4 +1,4 @@
-import { use, useEffect } from "react"
+// import { use, useEffect } from "react"
 import { Row, Col, Card, Spinner } from "react-bootstrap"
 import formatCurrency from "../utils/formatCurrency.js"
 import { useAuth } from "../context/AuthContext.jsx"
@@ -10,16 +10,9 @@ const DashboardPage = () => {
      const {
           dashboard,
           loading,
-          refreshDashboard,
      } = useDashboard()
 
      const { user } = useAuth()
-     // console.log("user: ", user)
-     // console.log(localStorage.getItem("user"));
-     useEffect(() => {
-          refreshDashboard()
-     }, [])
-
 
      if (loading) {
           return (
@@ -58,7 +51,7 @@ const DashboardPage = () => {
                               <Card.Body>
                                    <h6>Today's Customers</h6>
 
-                                   <h3>{dashboard?.today?.customers}</h3>
+                                   <h3>{dashboard?.today?.totalCustomersServed || 0}</h3>
                               </Card.Body>
                          </Card>
                     </Col>

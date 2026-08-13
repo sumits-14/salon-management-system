@@ -3,7 +3,7 @@ import { registerUser, loginUser, getMe } from "../controllers/authController.js
 import authorize from "../middleware/roleMiddleware.js"
 import protect from "../middleware/authMiddleware.js"
 
-const router = express.Router() 
+const router = express.Router()
 
 router.post('/register', registerUser)
 router.post('/login', loginUser)

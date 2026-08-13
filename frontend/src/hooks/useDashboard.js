@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getWorkerDashboard } from "../api/dashboardApi.js";
+import { getDashboard } from "../api/dashboardApi.js";
 import { showError } from "../utils/toast.js";
 
 const useDashboard = () => {
@@ -9,10 +9,11 @@ const useDashboard = () => {
 
      const refreshDashboard = async () => {
           try {
-               const response = await getWorkerDashboard()
+               const response = await getDashboard()
                setDashboard(response.data)
           } catch (error) {
-               setError(null)
+               console.log(error)
+               setError(error)
                showError("Unable to load dashboard");
           } finally {
                setLoading(false)

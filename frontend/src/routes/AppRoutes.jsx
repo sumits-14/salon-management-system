@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import LoginPage from "../pages/LoginPage.jsx";
 import DashboardPage from "../pages/DashboardPage.jsx";
 import CustomersPage from "../pages/CustomersPage.jsx";
@@ -15,6 +15,11 @@ import StaffPage from "../pages/StaffPage.jsx";
 const AppRoutes = () => {
      return (
           <Routes>
+               <Route
+                    path="/"
+                    element={<Navigate to="/login" replace/>}
+               />
+               
                <Route
                     path="/login"
                     element={<LoginPage />}

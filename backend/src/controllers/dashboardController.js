@@ -2,16 +2,22 @@ import Bill from "../models/Bill.js";
 
 
 const getAnalytics = async (workerId, startDate) => {
+
+     const matchStage = {
+          createdAt : {
+               $gte : startDate,
+          },
+     }
+
+     // ONly filter by worker when worker ID is provided
+     if(workerId) {
+          matchStage.worker = workerId;
+     }
+
      const result = await Bill.aggregate([
           {
-               $match : {
-                    worker : workerId,
-                    createdAt : {
-                         $gte : startDate,
-                    },
-               },
+               $match : matchStage,
           },
-
           {
                $group : {
                     _id : null,
@@ -27,18 +33,11 @@ const getAnalytics = async (workerId, startDate) => {
           },
      ]);
 
-     // return (
-     //      result[0] || {
-     //           totalCustomersServed : 0,
-     //           revenue : 0
-     //      }
-     // )/
-
      if(result.length === 0) {
           return {
                totalCustomersServed : 0,
                revenue : 0
-          }
+          };
      }
 
      return {
@@ -47,7 +46,7 @@ const getAnalytics = async (workerId, startDate) => {
      }
 }
 
-export const getWorkerDashboard =
+export const getDashboard =
      async (req, res) => {
           try {
                ////////////// One Day Analysis
@@ -60,8 +59,7 @@ export const getWorkerDashboard =
                weekStart.setHours(0, 0, 0, 0);
 
                weekStart.setDate(
-                    weekStart.getDate() -
-                    weekStart.getDay()
+                    weekStart.getDate() - weekStart.getDay()
                )
 
                /////////////// Month Starts
@@ -71,20 +69,29 @@ export const getWorkerDashboard =
                     1
                )
 
+               console.log("Dashboard User:", {
+                    id : req.user._id,
+                    role : req.user.role,
+               })
+
+               const workerId = req.user.role === 'admin' ? null : req.user._id;
+
+               console.log("Dashboard workerId:", workerId)
+
                const [todayStats, weekStats, monthStats] = await Promise.all([
                     getAnalytics(
-                         req.user._id,
-                         today
+                         workerId,
+                         today,
                     ),
 
                     getAnalytics(
-                         req.user._id,
-                         weekStart
+                         workerId,
+                         weekStart,
                     ),
 
                     getAnalytics(
-                         req.user._id,
-                         monthStart
+                         workerId,
+                         monthStart,
                     )
 
                ]);
@@ -97,61 +104,6 @@ export const getWorkerDashboard =
                     week : weekStats,
                     month : monthStats,
                });
-               
-          //      ///////// Today's Bill
-          //      const todaysBills = await Bill.find({
-          //           worker: req.user._id,
-
-          //           createdAt: {
-          //                $gte: today
-          //           },
-          //      });
-
-          //      /////////////// Week Bills
-          //      const weekBills = await Bill.find({
-          //           worker: req.user._id,
-
-          //           createdAt: {
-          //                $gte: weekStart
-          //           }
-          //      })
-
-          //      //////////////// Month Bill
-          //      const monthBills = await Bill.find({
-          //           worker: req.user._id,
-          //           createdAt: {
-          //                $gte: monthStart,
-          //           }
-          //      })
-
-          //      res.json({
-          //           success: true,
-
-          // ///// TODAY
-          //           today: {
-          //                totalCustomersServed: todaysBills.length,
-
-          //                revenue: todaysBills.reduce((acc, bill) => (
-          //                     sum + bill.totalAmount
-          //                ), 0)
-          //           },
-     
-          // ///// WEEK
-          //           week: {
-          //                totalCustomersServed: weekBills.length,
-
-          //                revenue: weekBills.reduce((sum, bill) =>
-          //                     sum + bill.totalAmount,
-          //                     0)
-          //           },
-
-          // ///// MONTH
-          //           month: {
-          //                totalCustomersServed: monthBills.length,
-
-          //                revenue: monthBills.reduce((sum, bill) => sum + bill.totalAmount, 0)
-          //           }
-          //      })
 
           } catch (error) {
                res.status(500).json({

@@ -1,10 +1,7 @@
 import axiosInstance from "./axiosInstance.js";
 
-export const getWorkerDashboard = () => {
+export const getDashboard = () => {
      return axiosInstance.get(
-          "/dashboard/worker"
-     )
+          "/dashboard"
+     );
 }
-
-
-
