@@ -3,12 +3,15 @@ import { Nav, Button } from 'react-bootstrap'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext.jsx'
 import { showSuccess } from '../../utils/toast.js'
+import { useTheme } from '../../context/ThemeContext.jsx'
 
 const Sidebar = () => {
 
      const navigate = useNavigate()
 
      const { user, logout } = useAuth()
+
+     const {theme, toggleTheme} = useTheme()
 
      const handleLogout = () => {
           logout();
@@ -76,14 +79,23 @@ const Sidebar = () => {
                          Billing History
                     </NavLink>
                </Nav>
-
+               <div className='mt-4 flex-column'>
+               <Button
+                    variant={theme === "dark" ? "light" : "dark"}
+                    // variant='dark'
+                    className='w-100 mb-2 mt-auto'
+                    onClick={toggleTheme}
+               >
+                    {theme === "dark" ? "☀️ Light Mode" : "🌙 Dark Mode"}
+               </Button>
                <Button
                     variant='danger'
-                    className='mt-4 w-100'
+                    className='mt-4 w-100 mt-auto'
                     onClick={handleLogout}
-               >
+                    >
                     Logout
                </Button>
+               </div>      
           </div>
      )
 }
