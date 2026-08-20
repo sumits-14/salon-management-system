@@ -5,7 +5,7 @@ import { useAuth } from '../../context/AuthContext.jsx'
 import { showSuccess } from '../../utils/toast.js'
 import { useTheme } from '../../context/ThemeContext.jsx'
 
-const Sidebar = () => {
+const Sidebar = ({onNavigate}) => {
 
      const navigate = useNavigate()
 
@@ -42,6 +42,7 @@ const Sidebar = () => {
                          to="/dashboard"
                          className={({ isActive }) => `nav-link ${isActive ? 'bg-primary text-white rounded' : 'text-white'
                               }`}
+                         onClick={onNavigate}
                     >
                          Dashboard
                     </NavLink>
@@ -50,6 +51,7 @@ const Sidebar = () => {
                          to="/customers"
                          className={({ isActive }) => `nav-link ${isActive ? 'bg-primary text-white rounded' : 'text-white'
                               }`}
+                         onClick={onNavigate}
                     >
                          Customers
                     </NavLink>
@@ -58,6 +60,7 @@ const Sidebar = () => {
                          to="/services"
                          className={({ isActive }) => `nav-link ${isActive ? 'bg-primary text-white rounded' : 'text-white'
                               }`}
+                         onClick={onNavigate}
                     >
                          Services
                     </NavLink>
@@ -67,6 +70,7 @@ const Sidebar = () => {
                          to="/staff"
                          className={({ isActive }) => `nav-link ${isActive ? 'bg-primary text-white rounded' : 'text-white'
                               }`}
+                         onClick={onNavigate}
                     >
                          Staff
                     </NavLink>)}
@@ -75,6 +79,7 @@ const Sidebar = () => {
                          to="/bills/history"
                          className={({ isActive }) => `nav-link ${isActive ? 'bg-primary text-white rounded' : 'text-white'
                               }`}
+                         onClick={onNavigate}
                     >
                          Billing History
                     </NavLink>

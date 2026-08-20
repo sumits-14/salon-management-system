@@ -156,10 +156,6 @@ export const getBills = async (req, res) => {
           }
      }
 
-     // if (worker) {
-     //      filter.worker = worker;
-     // }
-
      if (paymentMethod) {
           filter.paymentMethod = paymentMethod;
      }
@@ -219,7 +215,6 @@ export const getBills = async (req, res) => {
           });
      }
 }
-
 
 ///////////////////// Get bill by ID
 

@@ -34,8 +34,8 @@ const DashboardPage = () => {
      return (
           <>
                <h2 className="mb-4">Dashboard</h2>
-               <h2>{getGreeting()}, {" "}{user?.name}👋🏼</h2>
-               <p className="text-muted">
+               <h2 className="mb-2">{getGreeting()}, {" "}{user?.name}👋🏼</h2>
+               <p className="text-muted mb-1">
                     {new Date().toLocaleDateString('en-IN', {
                          weekday : 'long',
                          day : 'numeric',
@@ -45,9 +45,9 @@ const DashboardPage = () => {
                </p>
                <p className="text-muted">Role: {" "}{user?.role}</p>
 
-               <Row>
-                    <Col md={3}>
-                         <Card>
+               <Row className="g-3">
+                    <Col xs={12} sm={6} md={3}>
+                         <Card className="h-100">
                               <Card.Body>
                                    <h6>Today's Customers</h6>
 
@@ -56,7 +56,7 @@ const DashboardPage = () => {
                          </Card>
                     </Col>
 
-                    <Col md={3}>
+                    <Col xs={12} sm={6} md={3}>
                          <Card>
                               <Card.Body>
                                    <h6>Today's Revenue</h6>
@@ -70,7 +70,7 @@ const DashboardPage = () => {
                          </Card>
                     </Col>
 
-                    <Col md={3}>
+                    <Col xs={12} sm={6} md={3}>
                          <Card>
                               <Card.Body>
                                    <h6>Week Revenue</h6>
@@ -83,7 +83,7 @@ const DashboardPage = () => {
                          </Card>
                     </Col>
 
-                    <Col>
+                    <Col xs={12} sm={6} md={3}>
                          <Card>
                               <Card.Body>
                                    <h6>Month Revenue</h6>
